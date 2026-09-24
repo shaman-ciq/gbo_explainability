@@ -22,7 +22,7 @@ export function TabShell() {
   const hasStarted = messages.length > 0;
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-9rem)] max-w-2xl flex-col">
+    <div className="mx-auto flex h-full max-w-2xl flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto py-6">
         {!hasStarted ? (
           <div className="flex flex-col items-center gap-6 pt-10 text-center">

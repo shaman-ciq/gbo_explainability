@@ -35,24 +35,37 @@ export default function GboOptimizationPage() {
     window.history.replaceState({}, "", url);
   };
 
+  // Fixed-viewport shell (like AllyBrain's Layout.jsx): header stack has its
+  // natural height, `main` takes exactly what's left. Nothing below guesses
+  // its own height from `100vh` minus some assumed header size.
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="flex h-screen flex-col bg-slate-50">
       <TopBar />
       <ExperienceSwitcher value={variant} onChange={handleVariantChange} />
       <DashboardTabs variant={variant} active={tab} onChange={setTab} />
 
-      <main className="mx-auto max-w-6xl px-5 py-5">
-        {tab === "analytics" ? <AnalyticsTab /> : null}
+      <main className="min-h-0 flex-1 overflow-hidden">
+        <div className="mx-auto h-full max-w-6xl px-5 py-5">
+          {tab === "analytics" ? (
+            <div className="h-full overflow-y-auto">
+              <AnalyticsTab />
+            </div>
+          ) : null}
 
-        {tab === "executive-summary" ? (
-          <>
-            {variant === "pane" ? <PaneShell /> : null}
-            {variant === "inline" ? <InlineShell /> : null}
-            {variant === "tab" ? <ExecutiveSummaryNarrative /> : null}
-          </>
-        ) : null}
+          {tab === "executive-summary" ? (
+            <>
+              {variant === "pane" ? <PaneShell /> : null}
+              {variant === "inline" ? <InlineShell /> : null}
+              {variant === "tab" ? (
+                <div className="h-full overflow-y-auto">
+                  <ExecutiveSummaryNarrative />
+                </div>
+              ) : null}
+            </>
+          ) : null}
 
-        {tab === "chat" && variant === "tab" ? <TabShell /> : null}
+          {tab === "chat" && variant === "tab" ? <TabShell /> : null}
+        </div>
       </main>
     </div>
   );

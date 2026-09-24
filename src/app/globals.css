@@ -71,7 +71,32 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-brand: 0 4px 14px 0 rgb(59 130 246 / 0.25);
 
+  /* Elevation ladder (ported from AllyBrain) — floating surfaces use one of
+     these instead of a hard border, so panes read as lifted, not boxed. */
+  --shadow-pane:
+    0 1px 2px -1px rgb(15 23 42 / 0.06),
+    0 4px 12px -4px rgb(15 23 42 / 0.05),
+    0 12px 32px -12px rgb(15 23 42 / 0.06);
+  --shadow-pane-hover:
+    0 2px 4px -2px rgb(15 23 42 / 0.07),
+    0 10px 24px -6px rgb(15 23 42 / 0.07),
+    0 24px 56px -16px rgb(15 23 42 / 0.1);
+  --shadow-popover:
+    0 4px 8px -2px rgb(15 23 42 / 0.08),
+    0 12px 28px -4px rgb(15 23 42 / 0.1),
+    0 24px 56px -12px rgb(15 23 42 / 0.08);
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@utility shadow-pane {
+  box-shadow: var(--shadow-pane);
+}
+@utility shadow-pane-hover {
+  box-shadow: var(--shadow-pane-hover);
+}
+@utility shadow-popover {
+  box-shadow: var(--shadow-popover);
 }
 
 /* ─── Semantic tokens (light) ───────────────────────────────────────────── */
@@ -146,4 +171,27 @@
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Thin, light scrollbars (ported from AllyBrain) — the browser default reads
+   heavy and dark against this app's light chrome. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate-300) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-slate-300);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-slate-400);
 }

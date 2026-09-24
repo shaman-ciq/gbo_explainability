@@ -24,13 +24,13 @@ export function PaneShell() {
   const [paneOpen, setPaneOpen] = useState(true);
 
   return (
-    <div className="flex items-start gap-4">
-      <div className={cn("min-w-0 flex-1 transition-all", !paneOpen && "max-w-none")}>
+    <div className="flex h-full items-stretch gap-4">
+      <div className={cn("min-w-0 flex-1 overflow-y-auto transition-all", !paneOpen && "max-w-none")}>
         <ExecutiveSummaryNarrative />
       </div>
 
       {paneOpen ? (
-        <aside className="sticky top-4 flex h-[calc(100vh-7rem)] w-[360px] shrink-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs">
+        <aside className="shadow-pane flex h-full w-[360px] shrink-0 flex-col overflow-hidden rounded-xl bg-white">
           <header className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-3">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-brand-500" />
@@ -64,7 +64,7 @@ export function PaneShell() {
           size="icon"
           onClick={() => setPaneOpen(true)}
           aria-label="Open chat pane"
-          className="sticky top-4 shrink-0"
+          className="sticky top-0 shrink-0 self-start"
         >
           <PanelRightOpen className="size-4" />
         </Button>
