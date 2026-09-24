@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 
+import type { ChatVisual } from "./chat-visuals";
 import { answerForPrompt, matchResponse, type ChatAnswer } from "./mock-answers";
 import { STARTER_PROMPTS } from "./starter-prompts";
 
@@ -10,6 +11,7 @@ export type ChatMessage = {
   text: string;
   source?: string;
   followUpIds?: string[];
+  visual?: ChatVisual;
 };
 
 type ChatState = {
@@ -39,6 +41,7 @@ function appendAnswer(
             text: answer.summary,
             source: answer.source || undefined,
             followUpIds: answer.followUpIds,
+            visual: answer.visual,
           },
         ],
       }));

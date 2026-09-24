@@ -1,5 +1,7 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
+
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { FloatingAskBar } from "../floating-ask-bar";
 import { useNewChatStore } from "../chat-store";
@@ -24,6 +26,14 @@ export function InlineShell() {
         <ExecutiveSummaryNarrative />
 
         <section aria-label="Ask about this report" className="flex flex-col gap-4">
+          {messages.length === 0 ? (
+            <div className="flex items-center gap-2 px-1">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600">
+                <Sparkles className="size-3.5" />
+              </span>
+              <p className="text-sm font-semibold text-slate-900">Ask about this report</p>
+            </div>
+          ) : null}
           {messages.length > 0 ? <ChatTranscript store={store} /> : null}
           <StarterPromptChips onSelect={askStarterPrompt} />
         </section>

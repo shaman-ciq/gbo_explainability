@@ -33,7 +33,9 @@ export function PaneShell() {
         <aside className="shadow-pane flex h-full w-[360px] shrink-0 flex-col overflow-hidden rounded-xl bg-white">
           <header className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="size-4 text-brand-500" />
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600">
+                <Sparkles className="size-3.5" />
+              </span>
               <p className="text-sm font-semibold text-slate-900">Ask about this report</p>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setPaneOpen(false)} aria-label="Collapse chat pane">

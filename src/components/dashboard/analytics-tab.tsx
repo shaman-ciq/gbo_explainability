@@ -38,10 +38,14 @@ export function AnalyticsTab() {
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {METRICS.map((m) => (
-            <div key={m.label} className="rounded-lg border border-slate-200 p-3">
+          {METRICS.map((m, i) => (
+            <div
+              key={m.label}
+              style={{ animationDelay: `${i * 50}ms` }}
+              className="fade-in-up hover:shadow-pane rounded-lg bg-slate-50/70 p-3 transition-shadow"
+            >
               <p className="text-xs text-muted-foreground">{m.label}</p>
-              <p className="mt-1 text-lg font-semibold text-slate-900">{m.value}</p>
+              <p className="mt-1 text-lg font-semibold tracking-tight text-slate-900">{m.value}</p>
               <p className={m.up ? "text-xs text-success-600" : "text-xs text-error-600"}>
                 {m.up ? "↑" : "↓"} {m.delta}
               </p>

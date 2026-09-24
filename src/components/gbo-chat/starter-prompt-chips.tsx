@@ -43,12 +43,13 @@ export function StarterPromptChips({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        {promptsByCategory(active).map((prompt) => (
+        {promptsByCategory(active).map((prompt, i) => (
           <button
             key={prompt.id}
             type="button"
             onClick={() => onSelect(prompt.id)}
-            className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left text-sm text-slate-700 transition-colors hover:border-brand-300 hover:bg-brand-50/50"
+            style={{ animationDelay: `${i * 40}ms` }}
+            className="shadow-pane fade-in-up hover:shadow-pane-hover rounded-xl bg-white px-3.5 py-2.5 text-left text-sm text-slate-700 transition-all duration-150 hover:-translate-y-0.5 hover:text-slate-900"
           >
             {prompt.question}
           </button>

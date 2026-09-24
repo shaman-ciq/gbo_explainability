@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Info, Sparkles } from "lucide-react";
+import { AlertTriangle, Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import { useState } from "react";
 
 import { FormattedText } from "@/components/ui/formatted-text";
@@ -8,23 +8,40 @@ import {
   asOfDisclaimer,
   asOfLabel,
   changeDrivers,
+  overridePressure,
   pacing,
   recommendations,
   watchouts,
 } from "@/lib/mock/gbo-data";
 import { AccordionSection } from "./accordion-section";
+import { KpiStrip } from "./kpi-strip";
 
 /** The pushed narrative: Performance Overview (FR-016) + email-parity sections (FR-017). */
 export function ExecutiveSummaryNarrative() {
   return (
     <div className="flex flex-col gap-4">
+      <KpiStrip />
       <PerformanceOverviewCard />
-      <AccordionSection title="What changed and why" description="Top drivers behind pacing and performance shifts">
+
+      <AccordionSection
+        title="What changed and why"
+        description="Top drivers behind pacing and performance shifts"
+        defaultOpen={false}
+      >
         <ol className="divide-y divide-slate-100">
-          {changeDrivers.map((d, i) => (
+          {changeDrivers.map((d) => (
             <li key={d.id} className="flex gap-3 px-4 py-3">
-              <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-brand-50 text-xs font-bold tabular-nums text-brand-700">
-                {i + 1}
+              <span
+                className={
+                  "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md " +
+                  (d.id === "execution-healthy" ? "bg-success-50 text-success-600" : "bg-error-50 text-error-600")
+                }
+              >
+                {d.id === "execution-healthy" ? (
+                  <TrendingUp className="size-3.5" />
+                ) : (
+                  <TrendingDown className="size-3.5" />
+                )}
               </span>
               <div className="min-w-0">
                 <p className="text-sm font-semibold leading-snug text-slate-900">{d.title}</p>
@@ -39,7 +56,11 @@ export function ExecutiveSummaryNarrative() {
         <ActionsList />
       </AccordionSection>
 
-      <AccordionSection title="Watchouts" description="Risks to monitor while you act on recommendations">
+      <AccordionSection
+        title="Watchouts"
+        description="Risks to monitor while you act on recommendations"
+        defaultOpen={false}
+      >
         <ul className="grid gap-x-6 gap-y-2 px-4 py-3 md:grid-cols-2">
           {watchouts.map((w) => (
             <li key={w.id} className="flex gap-2 text-sm leading-snug">
@@ -57,18 +78,15 @@ export function ExecutiveSummaryNarrative() {
 }
 
 function PerformanceOverviewCard() {
-  const headline = `Account pacing MTD is **${pacing.pct}% (${pacing.status})**, with actual spend ${pacing.actualMtd} vs planned MTD ${pacing.plannedMtd}.`;
-  const highlights = [
-    `Largest under-pacing pocket: **JBC Fresh Sponsored Brands** at 54.7% ($98.4K / $180.0K).`,
-    `Projected month-end utilisation is **${pacing.projectedUtilisationPct}% (Behind)** on a ${pacing.monthlyPlan} monthly plan (${pacing.projectedVsPlan} vs plan).`,
-    `Manual overrides are contributing to spend pressure: $231.31 manual vs $204.76 Ally-recommended on sampled override days.`,
-  ];
+  const headline = `Largest under-pacing pocket: **JBC Fresh Sponsored Brands** at 54.7% ($98.4K / $180.0K). Manual overrides (${overridePressure.manual} vs ${overridePressure.allyRecommended} Ally-recommended) are adding spend pressure.`;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <section className="shadow-pane overflow-hidden rounded-xl bg-white">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <Sparkles className="size-4 shrink-0 text-brand-500" />
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600">
+            <Sparkles className="size-3.5" />
+          </span>
           <h2 className="text-sm font-semibold text-slate-900">Performance Overview</h2>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -79,24 +97,12 @@ function PerformanceOverviewCard() {
       <p className="border-b border-slate-100 bg-slate-50 px-4 py-2 text-xs leading-relaxed text-slate-600">
         {asOfDisclaimer}
       </p>
-      <div className="space-y-6 p-4">
-        <div className="space-y-3">
-          <p className="text-base font-medium leading-snug text-slate-900">
-            <FormattedText text={headline} />
-          </p>
-          <ul className="space-y-2">
-            {highlights.map((item) => (
-              <li key={item.slice(0, 30)} className="flex gap-2 text-sm leading-snug text-slate-700">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-slate-400" />
-                <span>
-                  <FormattedText text={item} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="space-y-5 p-4">
+        <p className="text-sm leading-relaxed text-slate-700">
+          <FormattedText text={headline} />
+        </p>
         <div>
-          <p className="text-2xs font-semibold uppercase tracking-wider text-slate-500">Recommendations</p>
+          <p className="text-2xs font-semibold tracking-wider text-slate-500 uppercase">Recommendations</p>
           <ol className="mt-3 space-y-2.5">
             {recommendations.map((rec, i) => (
               <li key={rec.id} className="flex items-start gap-3">
@@ -137,7 +143,7 @@ function ActionsList() {
               </div>
             </button>
             {open ? (
-              <div className="space-y-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3 pl-[3.25rem]">
+              <div className="fade-in-up space-y-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3 pl-[3.25rem]">
                 <Detail label="Lever" value={rec.lever} />
                 <Detail label="Exact setting change" value={rec.exactSettingChange} />
                 <Detail label="Why this now" value={rec.whyNow} />
@@ -158,7 +164,7 @@ function ActionsList() {
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-2xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-2xs font-semibold tracking-wide text-slate-500 uppercase">{label}</p>
       <p className="mt-0.5 text-sm leading-snug text-slate-700">{value}</p>
     </div>
   );

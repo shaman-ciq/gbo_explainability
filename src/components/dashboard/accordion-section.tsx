@@ -21,12 +21,12 @@ export function AccordionSection({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <section className={cn("overflow-hidden rounded-xl border border-slate-200 bg-white", className)}>
+    <section className={cn("shadow-pane overflow-hidden rounded-xl bg-white", className)}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-50/60"
       >
         <div>
           <p className="text-sm font-semibold text-slate-900">{title}</p>
@@ -34,7 +34,7 @@ export function AccordionSection({
         </div>
         <ChevronDown className={cn("size-4 shrink-0 text-slate-400 transition-transform", open && "rotate-180")} />
       </button>
-      {open ? <div className="border-t border-slate-100">{children}</div> : null}
+      {open ? <div className="fade-in-up border-t border-slate-100">{children}</div> : null}
     </section>
   );
 }
