@@ -10,8 +10,8 @@ import { ChatComposer } from "../chat-composer";
 import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
 import { HistoryPolicyNote } from "../history-note";
+import { MoreQuestions } from "../more-questions";
 import { NewChatButton } from "../new-chat-button";
-import { StarterPromptChips } from "../starter-prompt-chips";
 
 /**
  * Variant A — Pane. Today's pushed narrative stays exactly as-is; a docked chat
@@ -49,16 +49,10 @@ export function PaneShell({ store }: { store: ChatStore }) {
           </header>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-3.5 py-3.5">
-            {messages.length === 0 ? (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-500">
-                  Ask about pacing, drivers, or what to do next — grounded in the numbers on this page.
-                </p>
-                <StarterPromptChips onSelect={askStarterPrompt} />
-              </div>
-            ) : (
-              <ChatTranscript store={store} />
-            )}
+            <div className="flex flex-col gap-4">
+              {messages.length > 0 ? <ChatTranscript store={store} /> : null}
+              <MoreQuestions onSelect={askStarterPrompt} started={messages.length > 0} />
+            </div>
           </div>
 
           <div className="shrink-0 space-y-1.5 border-t border-slate-100 p-3">

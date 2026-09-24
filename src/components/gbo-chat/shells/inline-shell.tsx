@@ -7,8 +7,8 @@ import { FloatingAskBar } from "../floating-ask-bar";
 import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
 import { HistoryPolicyNote } from "../history-note";
+import { MoreQuestions } from "../more-questions";
 import { NewChatButton } from "../new-chat-button";
-import { StarterPromptChips } from "../starter-prompt-chips";
 
 /**
  * Variant C — Inline. The pushed narrative stays on top, same as today. The
@@ -38,7 +38,7 @@ export function InlineShell({ store }: { store: ChatStore }) {
             {messages.length > 0 ? <NewChatButton onReset={reset} /> : null}
           </div>
           {messages.length > 0 ? <ChatTranscript store={store} /> : null}
-          <StarterPromptChips onSelect={askStarterPrompt} />
+          <MoreQuestions onSelect={askStarterPrompt} started={messages.length > 0} />
           <HistoryPolicyNote className="px-1 text-2xs text-muted-foreground" />
         </section>
       </div>

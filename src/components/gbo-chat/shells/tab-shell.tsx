@@ -7,6 +7,7 @@ import { ChatHistoryMenu } from "../chat-history-menu";
 import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
 import { HistoryPolicyNote } from "../history-note";
+import { MoreQuestions } from "../more-questions";
 import { NewChatButton } from "../new-chat-button";
 import { StarterPromptChips } from "../starter-prompt-chips";
 
@@ -43,7 +44,10 @@ export function TabShell({ store }: { store: ChatStore }) {
             <StarterPromptChips onSelect={askStarterPrompt} className="w-full text-left" />
           </div>
         ) : (
-          <ChatTranscript store={store} />
+          <div className="flex flex-col gap-4">
+            <ChatTranscript store={store} />
+            <MoreQuestions onSelect={askStarterPrompt} started />
+          </div>
         )}
       </div>
 
