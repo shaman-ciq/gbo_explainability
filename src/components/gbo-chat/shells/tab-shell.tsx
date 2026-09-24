@@ -65,7 +65,7 @@ export function TabShell({ store }: { store: ChatStore }) {
 
       <div className="shrink-0 space-y-1.5 border-t border-slate-100 pt-3">
         <ChatComposer onSubmit={askFreeText} placeholder="Ask about your GBO performance…" autoFocus />
-        <HistoryPolicyNote className="px-1 text-center text-2xs text-muted-foreground" />
+        <HistoryPolicyNote className="px-1 text-center text-2xs text-muted-foreground" hasHistory />
       </div>
     </div>
   );

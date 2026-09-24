@@ -77,7 +77,7 @@ export function PaneShell({ store }: { store: ChatStore }) {
 
           <div className="shrink-0 space-y-1.5 border-t border-slate-100 p-3">
             <ChatComposer onSubmit={askFreeText} />
-            <HistoryPolicyNote className="px-1 text-2xs text-muted-foreground" />
+            <HistoryPolicyNote className="px-1 text-2xs text-muted-foreground" hasHistory />
           </div>
         </aside>
       ) : (
