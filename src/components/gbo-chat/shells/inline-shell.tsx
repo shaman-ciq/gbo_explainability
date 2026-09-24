@@ -4,8 +4,10 @@ import { Sparkles } from "lucide-react";
 
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { FloatingAskBar } from "../floating-ask-bar";
-import { useNewChatStore } from "../chat-store";
+import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
+import { HistoryPolicyNote } from "../history-note";
+import { NewChatButton } from "../new-chat-button";
 import { StarterPromptChips } from "../starter-prompt-chips";
 
 /**
@@ -14,11 +16,11 @@ import { StarterPromptChips } from "../starter-prompt-chips";
  * drawer) while the composer floats fixed at the bottom of the viewport,
  * always visible regardless of scroll — ported from AllyBrain's Layout/AskBar.
  */
-export function InlineShell() {
-  const store = useNewChatStore();
+export function InlineShell({ store }: { store: ChatStore }) {
   const messages = store((s) => s.messages);
   const askStarterPrompt = store((s) => s.askStarterPrompt);
   const askFreeText = store((s) => s.askFreeText);
+  const reset = store((s) => s.reset);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -26,16 +28,18 @@ export function InlineShell() {
         <ExecutiveSummaryNarrative />
 
         <section aria-label="Ask about this report" className="flex flex-col gap-4">
-          {messages.length === 0 ? (
-            <div className="flex items-center gap-2 px-1">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <div className="flex items-center gap-2">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-600">
                 <Sparkles className="size-3.5" />
               </span>
               <p className="text-sm font-semibold text-slate-900">Ask about this report</p>
             </div>
-          ) : null}
+            {messages.length > 0 ? <NewChatButton onReset={reset} /> : null}
+          </div>
           {messages.length > 0 ? <ChatTranscript store={store} /> : null}
           <StarterPromptChips onSelect={askStarterPrompt} />
+          <HistoryPolicyNote className="px-1 text-2xs text-muted-foreground" />
         </section>
       </div>
 

@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { cn } from "@/lib/utils";
 import { ChatComposer } from "../chat-composer";
-import { useNewChatStore } from "../chat-store";
+import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
+import { HistoryPolicyNote } from "../history-note";
+import { NewChatButton } from "../new-chat-button";
 import { StarterPromptChips } from "../starter-prompt-chips";
 
 /**
@@ -16,11 +18,11 @@ import { StarterPromptChips } from "../starter-prompt-chips";
  * pane sits alongside it for follow-up questions. Not an overlay drawer — a
  * permanent column, since this is a data-dense report page, not the exec landing page.
  */
-export function PaneShell() {
-  const store = useNewChatStore();
+export function PaneShell({ store }: { store: ChatStore }) {
   const messages = store((s) => s.messages);
   const askStarterPrompt = store((s) => s.askStarterPrompt);
   const askFreeText = store((s) => s.askFreeText);
+  const reset = store((s) => s.reset);
   const [paneOpen, setPaneOpen] = useState(true);
 
   return (
@@ -38,9 +40,12 @@ export function PaneShell() {
               </span>
               <p className="text-sm font-semibold text-slate-900">Ask about this report</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setPaneOpen(false)} aria-label="Collapse chat pane">
-              <PanelRightClose className="size-4" />
-            </Button>
+            <div className="flex items-center gap-0.5">
+              <NewChatButton onReset={reset} disabled={messages.length === 0} className="px-1.5" />
+              <Button variant="ghost" size="icon" onClick={() => setPaneOpen(false)} aria-label="Collapse chat pane">
+                <PanelRightClose className="size-4" />
+              </Button>
+            </div>
           </header>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-3.5 py-3.5">
@@ -56,8 +61,9 @@ export function PaneShell() {
             )}
           </div>
 
-          <div className="shrink-0 border-t border-slate-100 p-3">
+          <div className="shrink-0 space-y-1.5 border-t border-slate-100 p-3">
             <ChatComposer onSubmit={askFreeText} />
+            <HistoryPolicyNote className="px-1 text-2xs text-muted-foreground" />
           </div>
         </aside>
       ) : (

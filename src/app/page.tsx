@@ -6,6 +6,7 @@ import { AnalyticsTab } from "@/components/dashboard/analytics-tab";
 import { DashboardTabs, type DashboardTabId } from "@/components/dashboard/dashboard-tabs";
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { ExperienceSwitcher, type Variant } from "@/components/experience-switcher";
+import { useNewChatStore } from "@/components/gbo-chat/chat-store";
 import { InlineShell } from "@/components/gbo-chat/shells/inline-shell";
 import { PaneShell } from "@/components/gbo-chat/shells/pane-shell";
 import { TabShell } from "@/components/gbo-chat/shells/tab-shell";
@@ -22,6 +23,15 @@ function readVariantFromUrl(): Variant {
 export default function GboOptimizationPage() {
   const [variant, setVariant] = useState<Variant>("pane");
   const [tab, setTab] = useState<DashboardTabId>("executive-summary");
+
+  // One store per variant, created once for the page's lifetime (not per-tab-render) —
+  // so switching Analytics <-> Executive Summary never loses the conversation. Each
+  // variant keeps its own thread; only an explicit "New chat" or a real page reload
+  // clears it (this page is MTD/T-1 and refreshes daily, so nothing here survives reload
+  // by design — see the reset-on-reload note in each shell).
+  const paneStore = useNewChatStore();
+  const inlineStore = useNewChatStore();
+  const tabStore = useNewChatStore();
 
   useEffect(() => {
     setVariant(readVariantFromUrl());
@@ -54,8 +64,8 @@ export default function GboOptimizationPage() {
 
           {tab === "executive-summary" ? (
             <>
-              {variant === "pane" ? <PaneShell /> : null}
-              {variant === "inline" ? <InlineShell /> : null}
+              {variant === "pane" ? <PaneShell store={paneStore} /> : null}
+              {variant === "inline" ? <InlineShell store={inlineStore} /> : null}
               {variant === "tab" ? (
                 <div className="h-full overflow-y-auto">
                   <ExecutiveSummaryNarrative />
@@ -64,7 +74,7 @@ export default function GboOptimizationPage() {
             </>
           ) : null}
 
-          {tab === "chat" && variant === "tab" ? <TabShell /> : null}
+          {tab === "chat" && variant === "tab" ? <TabShell store={tabStore} /> : null}
         </div>
       </main>
     </div>
