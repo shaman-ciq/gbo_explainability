@@ -128,24 +128,49 @@ const FALLBACK: ChatAnswer = {
   source: "",
 };
 
-/** Very small keyword scorer over starter-prompt question text; good enough for a scripted demo. */
+/**
+ * Words too common to carry any topical signal — left unfiltered, a query
+ * like "What's the weather like today?" shares "what" and "the" with nearly
+ * every starter prompt (most start with "What...") and would score >= 2
+ * purely on filler, matching a completely unrelated answer.
+ */
+const STOPWORDS = new Set([
+  "what", "the", "is", "are", "this", "that", "can", "do", "does", "will", "would", "should",
+  "could", "to", "in", "on", "of", "for", "and", "or", "you", "your", "my", "me", "it", "its",
+  "was", "were", "be", "been", "being", "we", "us", "our", "did", "about", "right", "now",
+  "just", "get", "got", "have", "has", "had", "with", "from", "like",
+]);
+
+function significantWords(text: string): string[] {
+  return (text.toLowerCase().match(/[a-z]{3,}/g) ?? []).filter((w) => !STOPWORDS.has(w));
+}
+
+/**
+ * Keyword-overlap scorer over starter-prompt question text — good enough for
+ * a scripted demo, but stopword-filtered so filler words can't manufacture a
+ * false match. Requires at least 2 shared significant words *and* that they
+ * cover a real share of the candidate prompt's own vocabulary, so a single
+ * incidental word overlap on an otherwise long, unrelated prompt doesn't win.
+ */
 export function matchResponse(input: string): { answer: ChatAnswer; matchedPromptId: string | null } {
-  const normalized = input.trim().toLowerCase();
-  if (!normalized) return { answer: FALLBACK, matchedPromptId: null };
+  const inputWords = new Set(significantWords(input));
+  if (inputWords.size === 0) return { answer: FALLBACK, matchedPromptId: null };
 
   let bestId: string | null = null;
   let bestScore = 0;
 
   for (const prompt of STARTER_PROMPTS) {
-    const words = prompt.question.toLowerCase().match(/[a-z]{3,}/g) ?? [];
-    const score = words.reduce((acc, w) => (normalized.includes(w) ? acc + 1 : acc), 0);
-    if (score > bestScore) {
-      bestScore = score;
+    const promptWords = significantWords(prompt.question);
+    if (promptWords.length === 0) continue;
+    const matched = promptWords.filter((w) => inputWords.has(w)).length;
+    const coverage = matched / promptWords.length;
+    if (matched >= 2 && coverage >= 0.34 && matched > bestScore) {
+      bestScore = matched;
       bestId = prompt.id;
     }
   }
 
-  if (bestId && bestScore >= 2) {
+  if (bestId) {
     return { answer: MOCK_ANSWERS[bestId], matchedPromptId: bestId };
   }
   return { answer: FALLBACK, matchedPromptId: null };
