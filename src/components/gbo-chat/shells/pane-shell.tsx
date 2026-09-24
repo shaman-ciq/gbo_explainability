@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { cn } from "@/lib/utils";
 import { ChatComposer } from "../chat-composer";
-import { ChatHistoryMenu } from "../chat-history-menu";
 import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
+import { ChatViewTabs, type ChatView } from "../chat-view-tabs";
 import { HistoryPolicyNote } from "../history-note";
+import { HistoryView } from "../history-view";
 import { MoreQuestions } from "../more-questions";
 import { NewChatButton } from "../new-chat-button";
 
@@ -25,6 +26,9 @@ export function PaneShell({ store }: { store: ChatStore }) {
   const askFreeText = store((s) => s.askFreeText);
   const reset = store((s) => s.reset);
   const [paneOpen, setPaneOpen] = useState(true);
+  const [view, setView] = useState<ChatView>("conversation");
+
+  const questionCount = messages.filter((m) => m.role === "user").length;
 
   return (
     <div className="flex h-full items-stretch gap-4">
@@ -42,19 +46,33 @@ export function PaneShell({ store }: { store: ChatStore }) {
               <p className="truncate text-sm font-semibold text-slate-900">Ask about this report</p>
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
-              <NewChatButton onReset={reset} disabled={messages.length === 0} className="px-1.5" />
-              <ChatHistoryMenu store={store} />
+              <NewChatButton
+                onReset={() => {
+                  reset();
+                  setView("conversation");
+                }}
+                disabled={messages.length === 0}
+                className="px-1.5"
+              />
               <Button variant="ghost" size="icon" onClick={() => setPaneOpen(false)} aria-label="Collapse chat pane">
                 <PanelRightClose className="size-4" />
               </Button>
             </div>
           </header>
 
+          <div className="flex shrink-0 justify-center border-b border-slate-100 px-3 py-2">
+            <ChatViewTabs view={view} onChange={setView} historyCount={questionCount} />
+          </div>
+
           <div className="min-h-0 flex-1 overflow-y-auto px-3.5 py-3.5">
-            <div className="flex flex-col gap-4">
-              {messages.length > 0 ? <ChatTranscript store={store} /> : null}
-              <MoreQuestions onSelect={askStarterPrompt} started={messages.length > 0} />
-            </div>
+            {view === "history" ? (
+              <HistoryView store={store} onSelect={() => setView("conversation")} />
+            ) : (
+              <div className="flex flex-col gap-4">
+                {messages.length > 0 ? <ChatTranscript store={store} /> : null}
+                <MoreQuestions onSelect={askStarterPrompt} started={messages.length > 0} />
+              </div>
+            )}
           </div>
 
           <div className="shrink-0 space-y-1.5 border-t border-slate-100 p-3">
