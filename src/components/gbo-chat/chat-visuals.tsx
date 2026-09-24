@@ -237,7 +237,7 @@ function RecommendationVisual({ rec, store }: { rec: Recommendation; store?: Cha
           <button
             type="button"
             onClick={() => setComposing(true)}
-            className="flex items-center gap-1.5 text-xs font-medium text-brand-600 hover:text-brand-700"
+            className="-mx-2 -my-1 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-brand-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
           >
             <UserRound className="size-3.5" />
             Ask Sales Analyst to handle this
