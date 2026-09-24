@@ -2,6 +2,7 @@
 /.next/
 /out/
 /build
+/.firebase/
 .DS_Store
 *.pem
 .env*.local
