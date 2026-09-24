@@ -4,6 +4,7 @@ import { Sparkles } from "lucide-react";
 
 import { ExecutiveSummaryNarrative } from "@/components/dashboard/executive-summary-narrative";
 import { FloatingAskBar } from "../floating-ask-bar";
+import { ChatHistoryMenu } from "../chat-history-menu";
 import type { ChatStore } from "../chat-store";
 import { ChatTranscript } from "../chat-transcript";
 import { HistoryPolicyNote } from "../history-note";
@@ -35,7 +36,12 @@ export function InlineShell({ store }: { store: ChatStore }) {
               </span>
               <p className="text-sm font-semibold text-slate-900">Ask about this report</p>
             </div>
-            {messages.length > 0 ? <NewChatButton onReset={reset} /> : null}
+            {messages.length > 0 ? (
+              <div className="flex items-center gap-0.5">
+                <NewChatButton onReset={reset} />
+                <ChatHistoryMenu store={store} />
+              </div>
+            ) : null}
           </div>
           {messages.length > 0 ? <ChatTranscript store={store} /> : null}
           <MoreQuestions onSelect={askStarterPrompt} started={messages.length > 0} />
