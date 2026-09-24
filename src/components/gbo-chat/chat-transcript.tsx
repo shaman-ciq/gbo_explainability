@@ -22,7 +22,7 @@ export function ChatTranscript({ store, className }: { store: ChatStore; classNa
     <div className={cn("flex flex-col gap-4", className)}>
       {messages.map((message) => (
         <div key={message.id} className="flex flex-col gap-2">
-          <ChatMessageBubble message={message} />
+          <ChatMessageBubble message={message} store={store} />
           {message.role === "assistant" && message.followUpIds?.length ? (
             <FollowUpChips promptIds={message.followUpIds} onSelect={askStarterPrompt} />
           ) : null}

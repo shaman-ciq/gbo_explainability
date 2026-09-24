@@ -19,6 +19,7 @@ type ChatState = {
   isResponding: boolean;
   askStarterPrompt: (promptId: string) => void;
   askFreeText: (text: string) => void;
+  appendSystemMessage: (text: string) => void;
   reset: () => void;
 };
 
@@ -99,6 +100,11 @@ export function createChatStore() {
       const { answer } = matchResponse(trimmed);
       appendAnswer(set, answer);
     },
+    /** A direct confirmation note (e.g. after delegating a task) — no matching, no user turn first. */
+    appendSystemMessage: (text) =>
+      set((state) => ({
+        messages: [...state.messages, { id: nextId(), role: "assistant", text }],
+      })),
     reset: () => set({ messages: [], isResponding: false }),
   }));
 }

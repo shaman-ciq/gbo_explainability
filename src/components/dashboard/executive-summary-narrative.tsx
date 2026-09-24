@@ -1,9 +1,10 @@
 "use client";
 
-import { AlertTriangle, Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import { AlertTriangle, Check, Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import { useState } from "react";
 
 import { FormattedText } from "@/components/ui/formatted-text";
+import { useDelegationStore } from "@/components/gbo-chat/delegation-store";
 import {
   asOfDisclaimer,
   asOfLabel,
@@ -121,11 +122,13 @@ function PerformanceOverviewCard() {
 
 function ActionsList() {
   const [openId, setOpenId] = useState<string | null>(recommendations[0]?.id ?? null);
+  const delegations = useDelegationStore((s) => s.delegations);
 
   return (
     <ul className="divide-y divide-slate-100">
       {recommendations.map((rec, i) => {
         const open = openId === rec.id;
+        const delegation = delegations[rec.id];
         return (
           <li key={rec.id}>
             <button
@@ -140,6 +143,12 @@ function ActionsList() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold leading-snug text-slate-900">{rec.action}</p>
                 <p className="mt-1 line-clamp-1 text-sm text-slate-500">{rec.expectedImpact}</p>
+                {delegation ? (
+                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-success-50 px-2 py-0.5 text-2xs font-medium text-success-700">
+                    <Check className="size-3" />
+                    Assigned to {delegation.toPersona}
+                  </span>
+                ) : null}
               </div>
             </button>
             {open ? (

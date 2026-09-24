@@ -3,9 +3,9 @@ import { Sparkles } from "lucide-react";
 import { FormattedText } from "@/components/ui/formatted-text";
 import { cn } from "@/lib/utils";
 import { ChatVisualCard } from "./chat-visuals";
-import type { ChatMessage } from "./chat-store";
+import type { ChatMessage, ChatStore } from "./chat-store";
 
-export function ChatMessageBubble({ message }: { message: ChatMessage }) {
+export function ChatMessageBubble({ message, store }: { message: ChatMessage; store?: ChatStore }) {
   const isUser = message.role === "user";
 
   return (
@@ -20,7 +20,7 @@ export function ChatMessageBubble({ message }: { message: ChatMessage }) {
         >
           <FormattedText text={message.text} />
         </div>
-        {message.visual ? <ChatVisualCard visual={message.visual} /> : null}
+        {message.visual ? <ChatVisualCard visual={message.visual} store={store} /> : null}
         {message.source ? (
           <p className="px-1 text-2xs text-muted-foreground">Source: {message.source}</p>
         ) : null}
