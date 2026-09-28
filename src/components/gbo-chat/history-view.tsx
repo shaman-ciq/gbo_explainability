@@ -10,9 +10,9 @@ import type { ChatStore } from "./chat-store";
  * back to the conversation tab.
  */
 export function HistoryView({ store, onSelect }: { store: ChatStore; onSelect: () => void }) {
-  const messages = store((s) => s.messages);
+  const history = store((s) => s.history);
   const askFreeText = store((s) => s.askFreeText);
-  const questions = messages.filter((m) => m.role === "user");
+  const questions = history;
 
   if (questions.length === 0) {
     return (

@@ -16,6 +16,8 @@ export type ChatMessage = {
 
 type ChatState = {
   messages: ChatMessage[];
+  /** Every question asked this session, across "New chat" resets — reset() clears messages, never this. */
+  history: ChatMessage[];
   isResponding: boolean;
   askStarterPrompt: (promptId: string) => void;
   askFreeText: (text: string) => void;
@@ -55,23 +57,32 @@ function appendAnswer(
 export function createChatStore() {
   return create<ChatState>((set) => ({
     messages: [],
+    history: [],
     isResponding: false,
     askStarterPrompt: (promptId) => {
       const prompt = STARTER_PROMPTS.find((p) => p.id === promptId);
       if (!prompt) return;
-      set((state) => ({
-        isResponding: true,
-        messages: [...state.messages, { id: nextId(), role: "user", text: prompt.question }],
-      }));
+      set((state) => {
+        const userMessage: ChatMessage = { id: nextId(), role: "user", text: prompt.question };
+        return {
+          isResponding: true,
+          messages: [...state.messages, userMessage],
+          history: [...state.history, userMessage],
+        };
+      });
       appendAnswer(set, answerForPrompt(promptId));
     },
     askFreeText: (text) => {
       const trimmed = text.trim();
       if (!trimmed) return;
-      set((state) => ({
-        isResponding: true,
-        messages: [...state.messages, { id: nextId(), role: "user", text: trimmed }],
-      }));
+      set((state) => {
+        const userMessage: ChatMessage = { id: nextId(), role: "user", text: trimmed };
+        return {
+          isResponding: true,
+          messages: [...state.messages, userMessage],
+          history: [...state.history, userMessage],
+        };
+      });
       const { answer } = matchResponse(trimmed);
       appendAnswer(set, answer);
     },

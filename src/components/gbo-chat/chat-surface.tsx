@@ -28,13 +28,13 @@ export function ChatSurface({
   placeholder?: string;
 }) {
   const messages = store((s) => s.messages);
+  const history = store((s) => s.history);
   const askStarterPrompt = store((s) => s.askStarterPrompt);
   const askFreeText = store((s) => s.askFreeText);
   const reset = store((s) => s.reset);
   const [view, setView] = useState<ChatView>("conversation");
 
   const hasStarted = messages.length > 0;
-  const questionCount = messages.filter((m) => m.role === "user").length;
 
   return (
     <div className="flex h-full flex-col">
@@ -46,7 +46,7 @@ export function ChatSurface({
           }}
           disabled={!hasStarted}
         />
-        <ChatViewTabs view={view} onChange={setView} historyCount={questionCount} />
+        <ChatViewTabs view={view} onChange={setView} historyCount={history.length} />
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto py-6">
