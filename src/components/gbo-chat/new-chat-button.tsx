@@ -2,7 +2,7 @@ import { RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-/** Explicit reset control — the one way to clear a thread within a session (see history-note.tsx for the policy). */
+/** Explicit reset control — the one way to clear a thread within a session; nothing persists past a reload either. */
 export function NewChatButton({
   onReset,
   disabled,
