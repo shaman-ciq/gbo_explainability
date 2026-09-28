@@ -19,19 +19,28 @@ import {
 } from "@/lib/pacing-status";
 import { cn } from "@/lib/utils";
 
-const HEADERS = [
-  "Portfolio",
-  "Current Budget",
-  "Planned MTD",
-  "Actual MTD",
-  "Pacing %",
-  "Projected Utilisation",
-  "Projected Spend",
-  "Goal",
-  "Goal Value",
-  "Brand iROAS",
-  "Budget / Bid Opt",
-  "% Time in Budget",
+const HEADERS: { label: string; tooltip: string }[] = [
+  { label: "Portfolio", tooltip: "Level 1 (portfolio) rolled up over its Level 2 (campaign type) rows." },
+  { label: "Current Budget", tooltip: "The monthly budget currently configured for this portfolio." },
+  { label: "Planned MTD", tooltip: "The budget planned to be spent from the 1st of the month through today." },
+  { label: "Actual MTD", tooltip: "The budget actually spent from the 1st of the month through today." },
+  {
+    label: "Pacing %",
+    tooltip: "Actual MTD as a percentage of Planned MTD. 97–102% is On Plan; below is Behind, above is Ahead.",
+  },
+  {
+    label: "Projected Utilisation",
+    tooltip: "Projected month-end spend as a percentage of the Current Budget.",
+  },
+  { label: "Projected Spend", tooltip: "The spend Ally AI projects by month-end at the current run-rate." },
+  { label: "Goal", tooltip: "The efficiency metric this portfolio is optimized against, e.g. iROAS." },
+  { label: "Goal Value", tooltip: "The target value set for the Goal metric." },
+  { label: "Actual", tooltip: "The actual value achieved for the Goal metric so far this month, vs. Goal Value." },
+  { label: "Budget / Bid Opt", tooltip: "Who is controlling budget and bid decisions — Ally AI or a manual override." },
+  {
+    label: "% Time in Budget",
+    tooltip: "The share of the month this portfolio has had budget available to spend (spend-weighted).",
+  },
 ];
 
 function PacingStatusText({ pct }: { pct: number | null }) {
@@ -53,11 +62,24 @@ function ProjectedUtilisationCell({ projectedSpend, currentBudget }: { projected
   return <PacingStatusText pct={projectedUtilisationPct(projectedSpend, currentBudget)} />;
 }
 
-function IroasCell({ actual, goal }: { actual: number; goal: number }) {
+/** The value actually achieved for the Goal metric — green at/above goal, red below, with a +/- delta chip. */
+function ActualCell({ actual, goal }: { actual: number; goal: number }) {
   const onGoal = actual >= goal;
+  const delta = actual - goal;
+  const deltaLabel = `${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`;
   return (
-    <span className={cn("font-medium tabular-nums", onGoal ? "text-success-700" : "text-error-600")}>
-      {actual.toFixed(1)}x
+    <span className="inline-flex items-center gap-1.5">
+      <span className={cn("font-medium tabular-nums", onGoal ? "text-success-700" : "text-error-600")}>
+        {actual.toFixed(1)}
+      </span>
+      <span
+        className={cn(
+          "rounded-full px-1.5 py-0.5 text-2xs font-semibold tabular-nums",
+          onGoal ? "bg-success-50 text-success-700" : "bg-error-50 text-error-600",
+        )}
+      >
+        {deltaLabel}
+      </span>
     </span>
   );
 }
@@ -77,9 +99,9 @@ function LeafRow({ row }: { row: BudgetPlanLeafRow }) {
       </td>
       <td className="px-3 py-2 tabular-nums text-slate-700">{formatPlanUsd(row.projectedSpend)}</td>
       <td className="px-3 py-2 text-slate-700">{row.goalMetric}</td>
-      <td className="px-3 py-2 tabular-nums text-slate-700">{row.goalValue.toFixed(1)}x</td>
+      <td className="px-3 py-2 tabular-nums text-slate-700">{row.goalValue.toFixed(1)}</td>
       <td className="px-3 py-2">
-        <IroasCell actual={row.actualMetricValue} goal={row.goalValue} />
+        <ActualCell actual={row.actualMetricValue} goal={row.goalValue} />
       </td>
       <td className="px-3 py-2 text-slate-500">
         {row.budgetOpt} / {row.bidOpt}
@@ -92,9 +114,9 @@ function LeafRow({ row }: { row: BudgetPlanLeafRow }) {
 }
 
 /**
- * FR-014 — Budget Plan: Level 1 rollups (bg-brand-50) over their Level 2 leaf
- * rows, a Consolidated Total row, and color-coded Pacing % / Projected
- * Utilisation / iROAS columns matching the reference Analytics tab.
+ * FR-014 — Budget Plan: a Consolidated Total row up top, then Level 1 rollups
+ * (bg-brand-50) over their Level 2 leaf rows, with color-coded Pacing %,
+ * Projected Utilisation, and Actual-vs-Goal columns matching the live product.
  */
 export function BudgetPlanTable() {
   return (
@@ -108,14 +130,42 @@ export function BudgetPlanTable() {
         <table className="w-full min-w-[1100px] text-left text-xs">
           <thead>
             <tr className="border-b border-slate-200 text-2xs font-semibold tracking-wide text-slate-500 uppercase">
-              {HEADERS.map((h) => (
-                <th key={h} className={cn("px-3 py-2 whitespace-nowrap", h === HEADERS[0] && "sticky left-0 bg-white pl-8")}>
-                  {h}
+              {HEADERS.map((h, i) => (
+                <th
+                  key={h.label}
+                  className={cn("px-3 py-2 whitespace-nowrap", i === 0 && "sticky left-0 bg-white pl-8")}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    {h.label}
+                    <InfoTooltip text={h.tooltip} align={i === 0 ? "start" : "end"} />
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
+            <tr className="border-b-2 border-slate-200 bg-slate-50 font-semibold text-slate-900">
+              <td className="sticky left-0 bg-slate-50 py-2.5 pr-3 pl-4">{BUDGET_PLAN_TOTAL_ROW.label}</td>
+              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.currentBudget)}</td>
+              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.plannedMtd)}</td>
+              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.actualMtd)}</td>
+              <td className="px-3 py-2.5">
+                <PacingCell
+                  actualMtd={BUDGET_PLAN_TOTAL_ROW.actualMtd}
+                  plannedMtd={BUDGET_PLAN_TOTAL_ROW.plannedMtd}
+                />
+              </td>
+              <td className="px-3 py-2.5">
+                <ProjectedUtilisationCell
+                  projectedSpend={BUDGET_PLAN_TOTAL_ROW.projectedSpend}
+                  currentBudget={BUDGET_PLAN_TOTAL_ROW.currentBudget}
+                />
+              </td>
+              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.projectedSpend)}</td>
+              <td className="px-3 py-2.5 text-slate-400" colSpan={5}>
+                —
+              </td>
+            </tr>
             {BUDGET_PLAN_GROUPS.map((group) => {
               const rollup = aggregateBudgetPlanRows(group.rows);
               return (
@@ -146,9 +196,9 @@ export function BudgetPlanTable() {
                       {formatPlanUsd(rollup.projectedSpend)}
                     </td>
                     <td className="px-3 py-2 text-slate-700">{rollup.goalMetric}</td>
-                    <td className="px-3 py-2 tabular-nums text-slate-700">{rollup.goalValue.toFixed(1)}x</td>
+                    <td className="px-3 py-2 tabular-nums text-slate-700">{rollup.goalValue.toFixed(1)}</td>
                     <td className="px-3 py-2">
-                      <IroasCell actual={rollup.actualMetricValue} goal={rollup.goalValue} />
+                      <ActualCell actual={rollup.actualMetricValue} goal={rollup.goalValue} />
                     </td>
                     <td className="px-3 py-2 text-slate-500">
                       {rollup.budgetOpt} / {rollup.bidOpt}
@@ -163,28 +213,6 @@ export function BudgetPlanTable() {
                 </Fragment>
               );
             })}
-            <tr className="border-t-2 border-slate-200 bg-slate-50 font-semibold text-slate-900">
-              <td className="sticky left-0 bg-slate-50 py-2.5 pr-3 pl-4">{BUDGET_PLAN_TOTAL_ROW.label}</td>
-              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.currentBudget)}</td>
-              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.plannedMtd)}</td>
-              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.actualMtd)}</td>
-              <td className="px-3 py-2.5">
-                <PacingCell
-                  actualMtd={BUDGET_PLAN_TOTAL_ROW.actualMtd}
-                  plannedMtd={BUDGET_PLAN_TOTAL_ROW.plannedMtd}
-                />
-              </td>
-              <td className="px-3 py-2.5">
-                <ProjectedUtilisationCell
-                  projectedSpend={BUDGET_PLAN_TOTAL_ROW.projectedSpend}
-                  currentBudget={BUDGET_PLAN_TOTAL_ROW.currentBudget}
-                />
-              </td>
-              <td className="px-3 py-2.5 tabular-nums">{formatPlanUsd(BUDGET_PLAN_TOTAL_ROW.projectedSpend)}</td>
-              <td className="px-3 py-2.5 text-slate-400" colSpan={5}>
-                —
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
