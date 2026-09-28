@@ -5,7 +5,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { BudgetPlanTable } from "@/components/dashboard/budget-plan-table";
 import { ProjectedSpendUtilisationCard } from "@/components/dashboard/projected-spend-utilisation-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { InfoLabel } from "@/components/ui/info-label";
 import { budgetMetrics } from "@/lib/mock/gbo-data";
 import { spendTrend } from "@/lib/mock/analytics-series";
 
@@ -36,7 +36,7 @@ export function AnalyticsTab() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Budget Pacing</CardTitle>
-          <InfoTooltip text="Month-to-date budget, planned spend, actual spend, and utilization against the current monthly plan. Figures are as of the previous day (T-1)." />
+          <InfoLabel tooltip="Month-to-date budget, planned spend, actual spend, and utilization against the current monthly plan. Figures are as of the previous day (T-1)." />
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

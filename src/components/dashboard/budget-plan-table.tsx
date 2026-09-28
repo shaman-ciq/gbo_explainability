@@ -7,7 +7,7 @@ import {
   projectedUtilisationPct,
   type BudgetPlanLeafRow,
 } from "@/lib/mock/budget-plan-data";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { InfoLabel } from "@/components/ui/info-label";
 import {
   formatPacingPercent,
   formatPlanUsd,
@@ -123,7 +123,7 @@ export function BudgetPlanTable() {
     <section className="shadow-pane overflow-hidden rounded-xl bg-white">
       <header className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
         <h2 className="text-sm font-semibold text-slate-900">Budget Plan</h2>
-        <InfoTooltip text="Portfolio (Level 1/Level 2) budget, pacing, and efficiency vs. goal, rolled up from Ally AI's daily budget and bid decisions." />
+        <InfoLabel tooltip="Portfolio (Level 1/Level 2) budget, pacing, and efficiency vs. goal, rolled up from Ally AI's daily budget and bid decisions." />
       </header>
 
       <div className="overflow-x-auto">
@@ -135,10 +135,7 @@ export function BudgetPlanTable() {
                   key={h.label}
                   className={cn("px-3 py-2 whitespace-nowrap", i === 0 && "sticky left-0 bg-white pl-8")}
                 >
-                  <span className="inline-flex items-center gap-1">
-                    {h.label}
-                    <InfoTooltip text={h.tooltip} align={i === 0 ? "start" : "end"} />
-                  </span>
+                  <InfoLabel label={h.label} tooltip={h.tooltip} />
                 </th>
               ))}
             </tr>

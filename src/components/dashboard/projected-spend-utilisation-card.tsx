@@ -1,5 +1,5 @@
 import { FormattedText } from "@/components/ui/formatted-text";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { InfoLabel } from "@/components/ui/info-label";
 import { pacing } from "@/lib/mock/gbo-data";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +21,7 @@ export function ProjectedSpendUtilisationCard() {
     <section className="shadow-pane overflow-hidden rounded-xl bg-white">
       <header className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
         <h2 className="text-sm font-semibold text-slate-900">Projected spend &amp; utilisation</h2>
-        <InfoTooltip text="Projects month-end spend and utilization from the current run-rate, and compares it against the monthly budget target." />
+        <InfoLabel tooltip="Projects month-end spend and utilization from the current run-rate, and compares it against the monthly budget target." />
       </header>
 
       <div className="space-y-5 p-4">
