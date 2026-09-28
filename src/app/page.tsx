@@ -48,13 +48,14 @@ export default function GboOptimizationPage() {
   // natural height, `main` takes exactly what's left. Nothing below guesses
   // its own height from `100vh` minus some assumed header size.
   return (
-    <div className="flex h-screen flex-col bg-slate-50">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-slate-50">
+      <BackgroundGlow />
       <TopBar />
       <ExperienceSwitcher value={variant} onChange={handleVariantChange} />
       <DashboardTabs variant={variant} active={tab} onChange={setTab} />
 
-      <main className="min-h-0 flex-1 overflow-hidden">
-        <div className="mx-auto h-full max-w-6xl px-5 py-5">
+      <main className="relative min-h-0 flex-1 overflow-hidden">
+        <div className="h-full px-6 py-5">
           {tab === "analytics" ? (
             <div className="h-full overflow-y-auto">
               <AnalyticsTab />
@@ -68,6 +69,17 @@ export default function GboOptimizationPage() {
           ) : null}
         </div>
       </main>
+    </div>
+  );
+}
+
+/** A soft, fixed background glow — full-width pages read flat without one. Purple-led to stay on-brand. */
+function BackgroundGlow() {
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-slate-50">
+      <div className="absolute right-[10%] bottom-[8%] size-[420px] rounded-full bg-warning-400 opacity-60 blur-xl" />
+      <div className="absolute right-[-2%] bottom-[-2%] size-[480px] rounded-full bg-error-500 opacity-35 blur-xl" />
+      <div className="absolute right-[-8%] bottom-[-10%] size-[600px] rounded-full bg-brand-500 opacity-50 blur-xl" />
     </div>
   );
 }
