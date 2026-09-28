@@ -80,7 +80,7 @@ function ComparisonBars({ unit, legend, rows }: Extract<ChatVisual, { kind: "com
             />
             <Tooltip formatter={(v: number) => fmt(v)} cursor={{ fill: "#f8fafc" }} />
             <Bar dataKey={legend[0]} fill="#cbd5e1" radius={[3, 3, 3, 3]} barSize={7} />
-            <Bar dataKey={legend[1]} fill="#3b82f6" radius={[3, 3, 3, 3]} barSize={7} />
+            <Bar dataKey={legend[1]} fill="#875bf7" radius={[3, 3, 3, 3]} barSize={7} />
           </BarChart>
         </ResponsiveContainer>
       </div>

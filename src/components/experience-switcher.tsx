@@ -2,12 +2,11 @@
 
 import { cn } from "@/lib/utils";
 
-export type Variant = "pane" | "tab" | "inline";
+export type Variant = "chat-only" | "chat-summary";
 
 export const VARIANTS: { id: Variant; label: string; description: string }[] = [
-  { id: "pane", label: "A · Pane", description: "Narrative + docked chat pane" },
-  { id: "tab", label: "B · Tab", description: "Chat-only, pull-based, own tab" },
-  { id: "inline", label: "C · Inline", description: "Narrative + chat appended below" },
+  { id: "chat-only", label: "1 · Chat only", description: "Chat-only, pull-based, own tab — no Executive Summary tab" },
+  { id: "chat-summary", label: "2 · Chat + Summary", description: "Condensed summary panel + chat, chat takes most of the space" },
 ];
 
 export function ExperienceSwitcher({
@@ -30,7 +29,7 @@ export function ExperienceSwitcher({
             className={cn(
               "rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-200",
               v.id === value
-                ? "shadow-brand bg-brand-500 text-white"
+                ? "bg-brand-gradient shadow-brand text-white"
                 : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
             )}
           >

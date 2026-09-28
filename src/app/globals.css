@@ -13,18 +13,18 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* Brand palette — Tailwind blue */
-  --color-brand-25: #f5f9ff;
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
+  /* Brand palette — AllyBrain purple (Figma Purple/500 = #875bf7) */
+  --color-brand-25: #faf5ff;
+  --color-brand-50: #f3e8ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #875bf7;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
 
   --color-warning-50: #fffbeb;
   --color-warning-100: #fef3c7;
@@ -69,22 +69,24 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-brand: 0 4px 14px 0 rgb(59 130 246 / 0.25);
+  --shadow-brand: 0 4px 14px 0 rgb(135 91 247 / 0.35);
+  --shadow-brand-lg: 0 8px 28px 0 rgb(135 91 247 / 0.4);
 
-  /* Elevation ladder (ported from AllyBrain) — floating surfaces use one of
-     these instead of a hard border, so panes read as lifted, not boxed. */
+  /* Elevation ladder (ported from AllyBrain, purple-tinted) — floating
+     surfaces use one of these instead of a hard border, so panes read as
+     lifted, not boxed. */
   --shadow-pane:
     0 1px 2px -1px rgb(15 23 42 / 0.06),
     0 4px 12px -4px rgb(15 23 42 / 0.05),
-    0 12px 32px -12px rgb(15 23 42 / 0.06);
+    0 12px 32px -12px rgb(76 29 149 / 0.06);
   --shadow-pane-hover:
     0 2px 4px -2px rgb(15 23 42 / 0.07),
     0 10px 24px -6px rgb(15 23 42 / 0.07),
-    0 24px 56px -16px rgb(15 23 42 / 0.1);
+    0 24px 56px -16px rgb(76 29 149 / 0.12);
   --shadow-popover:
     0 4px 8px -2px rgb(15 23 42 / 0.08),
     0 12px 28px -4px rgb(15 23 42 / 0.1),
-    0 24px 56px -12px rgb(15 23 42 / 0.08);
+    0 24px 56px -12px rgb(76 29 149 / 0.08);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -97,6 +99,16 @@
 }
 @utility shadow-popover {
   box-shadow: var(--shadow-popover);
+}
+@utility shadow-brand-lg {
+  box-shadow: var(--shadow-brand-lg);
+}
+/* Reusable brand gradient — filled badges, icon tiles, primary buttons. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700));
+}
+@utility bg-brand-gradient-soft {
+  background-image: linear-gradient(135deg, var(--color-brand-50), var(--color-brand-100));
 }
 
 /* ─── Semantic tokens (light) ───────────────────────────────────────────── */

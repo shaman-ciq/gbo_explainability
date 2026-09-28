@@ -8,8 +8,10 @@ import type { Variant } from "@/components/experience-switcher";
 export type DashboardTabId = "analytics" | "executive-summary" | "chat";
 
 /**
- * Analytics | Executive Summary, plus a third "Chat" tab that only exists in
- * Variant B (Tab). Analytics is otherwise untouched by the chat prototype.
+ * The tab set depends on the approach: "chat-only" has no pushed narrative at
+ * all, so its second tab is Chat directly; "chat-summary" folds chat into the
+ * Executive Summary tab (as a panel + chat layout), so there's no separate
+ * Chat tab there.
  */
 export function DashboardTabs({
   variant,
@@ -20,24 +22,25 @@ export function DashboardTabs({
   active: DashboardTabId;
   onChange: (tab: DashboardTabId) => void;
 }) {
-  const showChatTab = variant === "tab";
+  const isChatOnly = variant === "chat-only";
 
   return (
     <div role="tablist" className="flex gap-5 border-b border-slate-200 px-5">
       <TabButton active={active === "analytics"} onClick={() => onChange("analytics")}>
         Analytics
       </TabButton>
-      <TabButton active={active === "executive-summary"} onClick={() => onChange("executive-summary")}>
-        Executive Summary
-      </TabButton>
-      {showChatTab ? (
+      {isChatOnly ? (
         <TabButton active={active === "chat"} onClick={() => onChange("chat")}>
           <span className="flex items-center gap-1.5">
             <MessageSquare className="size-3.5" />
             Chat
           </span>
         </TabButton>
-      ) : null}
+      ) : (
+        <TabButton active={active === "executive-summary"} onClick={() => onChange("executive-summary")}>
+          Executive Summary
+        </TabButton>
+      )}
     </div>
   );
 }

@@ -64,7 +64,7 @@ export function AnalyticsTab() {
                 tickFormatter={(v) => `$${Math.round(v / 1000)}K`}
               />
               <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "Spend"]} />
-              <Line type="monotone" dataKey="spend" stroke="#3b82f6" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="spend" stroke="#875bf7" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

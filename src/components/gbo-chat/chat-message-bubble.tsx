@@ -15,7 +15,7 @@ export function ChatMessageBubble({ message, store }: { message: ChatMessage; st
         <div
           className={cn(
             "rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line",
-            isUser ? "rounded-tr-sm bg-brand-500 text-white" : "shadow-pane rounded-tl-sm bg-white text-slate-800",
+            isUser ? "bg-brand-gradient rounded-tr-sm text-white" : "shadow-pane rounded-tl-sm bg-white text-slate-800",
           )}
         >
           <FormattedText text={message.text} />
@@ -38,7 +38,7 @@ function MessageAvatar({ isUser }: { isUser: boolean }) {
     );
   }
   return (
-    <span className="shadow-brand mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white">
+    <span className="bg-brand-gradient shadow-brand mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-white">
       <Sparkles className="size-3.5" />
     </span>
   );
