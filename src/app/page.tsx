@@ -8,6 +8,7 @@ import { ExperienceSwitcher, type Variant } from "@/components/experience-switch
 import { useNewChatStore } from "@/components/gbo-chat/chat-store";
 import { ChatSummaryShell } from "@/components/gbo-chat/shells/chat-summary-shell";
 import { TabShell } from "@/components/gbo-chat/shells/tab-shell";
+import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { TopBar } from "@/components/layout/top-bar";
 
 const VALID_VARIANTS: Variant[] = ["chat-only", "chat-summary"];
@@ -48,27 +49,31 @@ export default function GboOptimizationPage() {
   // natural height, `main` takes exactly what's left. Nothing below guesses
   // its own height from `100vh` minus some assumed header size.
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-slate-50">
+    <div className="relative flex h-screen overflow-hidden bg-slate-50">
       <BackgroundGlow />
-      <TopBar />
-      <ExperienceSwitcher value={variant} onChange={handleVariantChange} />
-      <DashboardTabs variant={variant} active={tab} onChange={setTab} />
+      <SidebarNav />
 
-      <main className="relative min-h-0 flex-1 overflow-hidden">
-        <div className="h-full px-6 py-5">
-          {tab === "analytics" ? (
-            <div className="h-full overflow-y-auto">
-              <AnalyticsTab />
-            </div>
-          ) : null}
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <TopBar />
+        <ExperienceSwitcher value={variant} onChange={handleVariantChange} />
+        <DashboardTabs variant={variant} active={tab} onChange={setTab} />
 
-          {tab === "chat" && variant === "chat-only" ? <TabShell store={chatOnlyStore} /> : null}
+        <main className="relative min-h-0 flex-1 overflow-hidden">
+          <div className="h-full px-6 py-5">
+            {tab === "analytics" ? (
+              <div className="h-full overflow-y-auto">
+                <AnalyticsTab />
+              </div>
+            ) : null}
 
-          {tab === "executive-summary" && variant === "chat-summary" ? (
-            <ChatSummaryShell store={chatSummaryStore} />
-          ) : null}
-        </div>
-      </main>
+            {tab === "chat" && variant === "chat-only" ? <TabShell store={chatOnlyStore} /> : null}
+
+            {tab === "executive-summary" && variant === "chat-summary" ? (
+              <ChatSummaryShell store={chatSummaryStore} />
+            ) : null}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

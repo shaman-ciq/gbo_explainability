@@ -1,6 +1,9 @@
 import { ChevronRight, Target } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+const EXPLAINABILITY_DASHBOARD_URL = "https://goal-based-optimization.vercel.app/explainability-dashboard";
 
 export function TopBar() {
   return (
@@ -22,9 +25,14 @@ export function TopBar() {
         <Button variant="outline" size="sm">
           Edit optimization
         </Button>
-        <Button variant="secondary" size="sm">
+        <a
+          href={EXPLAINABILITY_DASHBOARD_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+        >
           Alerts
-        </Button>
+        </a>
       </div>
     </header>
   );
