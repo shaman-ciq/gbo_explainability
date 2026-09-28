@@ -1,3 +1,4 @@
+import { CONSTRAINT_GAPS } from "@/lib/mock/constraint-gaps-data";
 import {
   changeDrivers,
   executionHealth,
@@ -38,18 +39,10 @@ export const MOCK_ANSWERS: Record<string, ChatAnswer> = {
     },
   },
   "changed-targeting-mix": {
-    summary: `${changeDrivers[3].detail} That's a 19.3-point gap on both sides of the same constraint — the configured mix hasn't kept pace with how the campaigns are actually spending.`,
+    summary: `${changeDrivers[3].detail} These are the four largest constraint gaps right now — two on Pilgrims Core targeting mix, one on JBC Fresh campaign type, and one on Pilgrims Core branded share.`,
     source: "Analytics → Constraint gaps",
     followUpIds: ["next-highest-impact", "why-pilgrims-iroas"],
-    visual: {
-      kind: "comparison-bars",
-      unit: "percent",
-      legend: ["Target %", "Actual %"],
-      rows: [
-        { label: "Competitor", a: 30, b: 10.7 },
-        { label: "Generic", a: 70, b: 89.3 },
-      ],
-    },
+    visual: { kind: "constraint-gaps", gaps: CONSTRAINT_GAPS },
   },
   "changed-spend-gap": {
     summary: `The single largest pocket is **${changeDrivers[0].title.replace(" under-pacing", "")}**. Pilgrims Core Sponsored Products is also behind plan.`,

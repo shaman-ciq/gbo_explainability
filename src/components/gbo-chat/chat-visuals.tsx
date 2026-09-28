@@ -4,6 +4,7 @@ import { AlertTriangle, Check, Send, UserRound } from "lucide-react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import type { ConstraintGap } from "@/lib/mock/constraint-gaps-data";
 import type { Recommendation } from "@/lib/mock/gbo-data";
 import { cn } from "@/lib/utils";
 import type { ChatStore } from "./chat-store";
@@ -18,15 +19,23 @@ export type ChatVisual =
       rows: { label: string; a: number; b: number; note?: string }[];
     }
   | { kind: "pacing-bar"; label: string; actualPct: number; projectedPct: number }
-  | { kind: "recommendation"; rec: Recommendation };
+  | { kind: "recommendation"; rec: Recommendation }
+  | { kind: "constraint-gaps"; gaps: ConstraintGap[] };
 
 export function ChatVisualCard({ visual, store }: { visual: ChatVisual; store?: ChatStore }) {
+  const wide = visual.kind === "constraint-gaps";
   return (
-    <div className="shadow-pane fade-in-up w-full max-w-[420px] overflow-hidden rounded-xl bg-white p-3.5">
+    <div
+      className={cn(
+        "shadow-pane fade-in-up w-full overflow-hidden rounded-xl bg-white p-3.5",
+        wide ? "max-w-[720px]" : "max-w-[420px]",
+      )}
+    >
       {visual.kind === "stat-tiles" ? <StatTiles tiles={visual.tiles} /> : null}
       {visual.kind === "comparison-bars" ? <ComparisonBars {...visual} /> : null}
       {visual.kind === "pacing-bar" ? <PacingBar {...visual} /> : null}
       {visual.kind === "recommendation" ? <RecommendationVisual rec={visual.rec} store={store} /> : null}
+      {visual.kind === "constraint-gaps" ? <ConstraintGapsGrid gaps={visual.gaps} /> : null}
     </div>
   );
 }
@@ -253,6 +262,71 @@ function Row({ label, value }: { label: string; value: string }) {
     <div>
       <dt className="text-2xs font-semibold tracking-wide text-slate-400 uppercase">{label}</dt>
       <dd className="mt-0.5 leading-snug text-slate-600">{value}</dd>
+    </div>
+  );
+}
+
+function ShareBar({ label, pct, tone }: { label: string; pct: number; tone: "neutral" | "over" | "under" }) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-2xs text-muted-foreground">
+        <span>{label}</span>
+        <span className="font-medium tabular-nums text-slate-600">{pct}%</span>
+      </div>
+      <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+        <div
+          className={cn(
+            "h-full rounded-full",
+            tone === "neutral" && "bg-slate-400",
+            tone === "over" && "bg-warning-500",
+            tone === "under" && "bg-error-500",
+          )}
+          style={{ width: `${Math.min(pct, 100)}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ConstraintGapCard({ gap }: { gap: ConstraintGap }) {
+  const over = gap.spendSharePercent > gap.constraintPercent;
+
+  return (
+    <div className="space-y-2.5 rounded-lg bg-slate-50 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-xs font-semibold text-slate-900">{gap.constraintType}</p>
+          <p className="text-2xs leading-snug text-muted-foreground">
+            {gap.level1}
+            {gap.level2 !== "None" ? ` · ${gap.level2}` : ""} · {gap.group}
+          </p>
+        </div>
+        <span
+          className={cn(
+            "shrink-0 rounded-full px-2 py-0.5 text-2xs font-semibold",
+            gap.alert === "High Deviation" ? "bg-error-100 text-error-700" : "bg-warning-100 text-warning-700",
+          )}
+        >
+          {gap.deviationPoints.toFixed(1)}pp
+        </span>
+      </div>
+
+      <div className="space-y-1.5">
+        <ShareBar label="Target" pct={gap.constraintPercent} tone="neutral" />
+        <ShareBar label="Actual" pct={gap.spendSharePercent} tone={over ? "over" : "under"} />
+      </div>
+
+      <p className="text-2xs leading-snug text-slate-600">{gap.plainLanguage}</p>
+    </div>
+  );
+}
+
+function ConstraintGapsGrid({ gaps }: { gaps: ConstraintGap[] }) {
+  return (
+    <div className="grid gap-2.5 sm:grid-cols-2">
+      {gaps.map((gap) => (
+        <ConstraintGapCard key={gap.id} gap={gap} />
+      ))}
     </div>
   );
 }
