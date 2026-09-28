@@ -14,7 +14,9 @@ export const pacing = {
   actualMtd: "$804.0K",
   plannedMtd: "$1.01M",
   projectedUtilisationPct: 94.1,
+  projectedSpend: "$1.12M",
   projectedVsPlan: "-$70.0K",
+  projectedVsPlanPct: 6,
   monthlyPlan: "$1.19M",
 };
 
