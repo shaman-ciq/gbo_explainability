@@ -1,7 +1,5 @@
 import { Fragment } from "react";
 
-import { Info } from "lucide-react";
-
 import {
   aggregateBudgetPlanRows,
   BUDGET_PLAN_GROUPS,
@@ -9,6 +7,7 @@ import {
   projectedUtilisationPct,
   type BudgetPlanLeafRow,
 } from "@/lib/mock/budget-plan-data";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 import {
   formatPacingPercent,
   formatPlanUsd,
@@ -21,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const HEADERS = [
-  "Level 1 / Level 2",
+  "Portfolio",
   "Current Budget",
   "Planned MTD",
   "Actual MTD",
@@ -102,7 +101,7 @@ export function BudgetPlanTable() {
     <section className="shadow-pane overflow-hidden rounded-xl bg-white">
       <header className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
         <h2 className="text-sm font-semibold text-slate-900">Budget Plan</h2>
-        <Info className="size-3.5 text-slate-400" />
+        <InfoTooltip text="Portfolio (Level 1/Level 2) budget, pacing, and efficiency vs. goal, rolled up from Ally AI's daily budget and bid decisions." />
       </header>
 
       <div className="overflow-x-auto">

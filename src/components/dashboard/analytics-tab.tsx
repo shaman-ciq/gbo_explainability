@@ -1,11 +1,11 @@
 "use client";
 
-import { Info } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { BudgetPlanTable } from "@/components/dashboard/budget-plan-table";
 import { ProjectedSpendUtilisationCard } from "@/components/dashboard/projected-spend-utilisation-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { budgetMetrics } from "@/lib/mock/gbo-data";
 import { spendTrend } from "@/lib/mock/analytics-series";
 
@@ -32,11 +32,11 @@ const METRICS = [
  */
 export function AnalyticsTab() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 pb-10">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Budget Pacing</CardTitle>
-          <Info className="size-3.5 text-slate-400" />
+          <InfoTooltip text="Month-to-date budget, planned spend, actual spend, and utilization against the current monthly plan. Figures are as of the previous day (T-1)." />
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
