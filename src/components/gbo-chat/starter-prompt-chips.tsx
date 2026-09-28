@@ -1,18 +1,13 @@
-"use client";
-
-import { useState } from "react";
-
 import { cn } from "@/lib/utils";
-import {
-  PROMPT_CATEGORIES,
-  promptsByCategory,
-  STARTER_PROMPTS,
-  type PromptCategory,
-} from "./starter-prompts";
+import { CATEGORY_PRIMARY_PROMPT_ID, PROMPT_CATEGORIES, STARTER_PROMPTS } from "./starter-prompts";
 
 const STARTER_PROMPTS_BY_ID = Object.fromEntries(STARTER_PROMPTS.map((p) => [p.id, p]));
 
-/** Category tabs + question chips, same shape as the RMM Ask AI "Popular Prompts" panel. */
+/**
+ * Category chips that generate their commentary instantly on click — modeled
+ * on the Budget Pacing email's section tabs, not a two-step menu. The other
+ * prompt in each category surfaces afterward as a follow-up chip.
+ */
 export function StarterPromptChips({
   onSelect,
   className,
@@ -20,41 +15,19 @@ export function StarterPromptChips({
   onSelect: (promptId: string) => void;
   className?: string;
 }) {
-  const [active, setActive] = useState<PromptCategory>(PROMPT_CATEGORIES[0].id);
-
   return (
-    <div className={cn("space-y-2.5", className)}>
-      <div className="flex flex-wrap gap-1.5">
-        {PROMPT_CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            onClick={() => setActive(cat.id)}
-            className={cn(
-              "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
-              active === cat.id
-                ? "border-brand-500 bg-brand-50 text-brand-700"
-                : "border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900",
-            )}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        {promptsByCategory(active).map((prompt, i) => (
-          <button
-            key={prompt.id}
-            type="button"
-            onClick={() => onSelect(prompt.id)}
-            style={{ animationDelay: `${i * 40}ms` }}
-            className="shadow-pane fade-in-up hover:shadow-pane-hover rounded-xl bg-white px-3.5 py-2.5 text-left text-sm text-slate-700 transition-all duration-150 hover:-translate-y-0.5 hover:text-slate-900"
-          >
-            {prompt.question}
-          </button>
-        ))}
-      </div>
+    <div className={cn("flex flex-wrap justify-center gap-1.5", className)}>
+      {PROMPT_CATEGORIES.map((cat, i) => (
+        <button
+          key={cat.id}
+          type="button"
+          onClick={() => onSelect(CATEGORY_PRIMARY_PROMPT_ID[cat.id])}
+          style={{ animationDelay: `${i * 40}ms` }}
+          className="shadow-pane fade-in-up hover:shadow-pane-hover rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+        >
+          {cat.label}
+        </button>
+      ))}
     </div>
   );
 }

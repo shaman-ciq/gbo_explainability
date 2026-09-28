@@ -33,6 +33,17 @@ export const STARTER_PROMPTS: StarterPrompt[] = [
   { id: "perf-biggest-contributor", category: "performance", question: "Which brand is contributing most to under-pacing?" },
 ];
 
-export function promptsByCategory(category: PromptCategory) {
-  return STARTER_PROMPTS.filter((p) => p.category === category);
-}
+/**
+ * The prompt whose answer serves as a category's instant commentary — modeled on
+ * the Budget Pacing email's section tabs (Weekly State of Account, Constraint
+ * Analysis, ...), where clicking a section immediately shows its narrative
+ * instead of a menu of sub-questions. The other prompt in each category is
+ * reachable afterward as a follow-up chip.
+ */
+export const CATEGORY_PRIMARY_PROMPT_ID: Record<PromptCategory, string> = {
+  why: "why-pacing-behind",
+  "what-changed": "changed-spend-gap",
+  "what-next": "next-highest-impact",
+  watchouts: "watch-general",
+  performance: "perf-execution-health",
+};

@@ -24,7 +24,7 @@ export const MOCK_ANSWERS: Record<string, ChatAnswer> = {
   "why-pacing-behind": {
     summary: `Account pacing MTD is **${pacing.pct}% (${pacing.status})**, with actual spend ${pacing.actualMtd} vs planned MTD ${pacing.plannedMtd}. The largest single driver is **${changeDrivers[0].title}**.`,
     source: "Executive Summary → Performance Overview",
-    followUpIds: ["changed-spend-gap", "next-jbc-action"],
+    followUpIds: ["why-pilgrims-iroas", "changed-spend-gap", "next-jbc-action"],
     visual: { kind: "pacing-bar", label: "Account pacing MTD", actualPct: pacing.pct, projectedPct: pacing.projectedUtilisationPct },
   },
   "why-pilgrims-iroas": {
@@ -47,7 +47,7 @@ export const MOCK_ANSWERS: Record<string, ChatAnswer> = {
   "changed-spend-gap": {
     summary: `The single largest pocket is **${changeDrivers[0].title.replace(" under-pacing", "")}**. Pilgrims Core Sponsored Products is also behind plan.`,
     source: "Analytics → Budget Plan",
-    followUpIds: ["next-jbc-action", "perf-biggest-contributor"],
+    followUpIds: ["changed-targeting-mix", "next-jbc-action", "perf-biggest-contributor"],
     visual: {
       kind: "comparison-bars",
       unit: "currency",
